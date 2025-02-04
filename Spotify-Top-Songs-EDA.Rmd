@@ -1,0 +1,108 @@
+---
+title: "Spotify-Top-Songs-EDA"
+author: "Riley Modlin"
+date: "2025-01-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+library(dplyr)
+
+DATA = read_csv("C:/Users/rimod/OneDrive/Desktop/spotify-top-songs-data-analysis/playlist_2010to2023.csv", col_names=T)
+
+```
+
+```{r}
+DATA
+```
+
+
+Q1: Is there a relationship between artist_popularity and danceability?
+
+```{r}
+ggplot(DATA, aes(artist_popularity, danceability)) + geom_boxplot()
+
+ggplot(DATA, aes(artist_popularity, danceability, color = year)) + geom_point()
+```
+
+Q2: Which years had the shortest/longest songs on average?
+
+```{r}
+duration_averages = DATA %>% 
+                      group_by(year) %>%
+                      summarize(avg_ms = mean(duration_ms))
+
+duration_averages$avg_second <- duration_averages$avg_ms/1000
+
+duration_averages$avg_min <- duration_averages$avg_second/60
+
+duration_averages
+
+ggplot(duration_averages, aes(year, avg_min)) + geom_point() +
+geom_line(color = 'blue')
+
+ggplot(duration_averages, aes(year, avg_min)) + geom_col()
+```
+
+Q3: How does song duration vary from year to year?
+
+```{r}
+DATA_grouped <- DATA %>%
+  mutate(year_group = case_when(
+    year < 2005 ~ "2000-2004",
+    year >= 2005 & year < 2010 ~ "2005-2009",
+    year >= 2010 & year < 2015 ~ "2010-2014",
+    year >= 2015 & year < 2020 ~ "2015-2019",
+    year >= 2020 ~ "2020-2023"
+  ))
+
+ggplot(DATA_grouped, aes(x = year, y = duration_ms, color = year_group)) +
+  geom_point(size = 2) +  # Adjust point size
+  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
+                                "2005-2009" = "#84EEF0", 
+                                "2010-2014" = "#F071E8", 
+                                "2015-2019" = "#61D6A1", 
+                                "2020-2023" = "#FFB957"))
+
+
+```
+
+Q4: Is there a relationship between artist_popularity and track_popularity?
+
+```{r}
+ggplot(DATA, aes(artist_popularity, track_popularity)) + geom_boxplot()
+
+ggplot(DATA_grouped, aes(x = artist_popularity, y = track_popularity, color = year_group)) +
+  geom_point(size = 1) +
+  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
+                                "2005-2009" = "#84EEF0", 
+                                "2010-2014" = "#F071E8", 
+                                "2015-2019" = "#61D6A1", 
+                                "2020-2023" = "#FFB957"))
+```
+
+Q5: Is there a relationship between speechiness and acousticness?
+
+```{r}
+ggplot(DATA, aes(speechiness, acousticness)) + geom_boxplot()
+
+ggplot(DATA_grouped, aes(x = speechiness, y = acousticness, color = year_group)) +
+  geom_point(size = 1) +
+  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
+                                "2005-2009" = "#84EEF0", 
+                                "2010-2014" = "#F071E8", 
+                                "2015-2019" = "#61D6A1", 
+                                "2020-2023" = "#FFB957"))
+```
+
+Q6: What genres were common among the most popular songs?
+
+```{r}
+DATA_most_popular <- DATA_grouped[DATA_grouped$track_popularity >= 90, , drop = FALSE]
+
+DATA_most_popular
+```
+
