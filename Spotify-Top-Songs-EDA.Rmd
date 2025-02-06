@@ -17,6 +17,15 @@ DATA = read_csv("C:/Users/rimod/OneDrive/Desktop/spotify-top-songs-data-analysis
 
 ```{r}
 DATA
+
+DATA_grouped <- DATA %>%
+  mutate(year_group = case_when(
+    year < 2005 ~ "2000-2004",
+    year >= 2005 & year < 2010 ~ "2005-2009",
+    year >= 2010 & year < 2015 ~ "2010-2014",
+    year >= 2015 & year < 2020 ~ "2015-2019",
+    year >= 2020 ~ "2020-2023"
+  ))
 ```
 
 
@@ -25,7 +34,12 @@ Q1: Is there a relationship between artist_popularity and danceability?
 ```{r}
 ggplot(DATA, aes(artist_popularity, danceability)) + geom_boxplot()
 
-ggplot(DATA, aes(artist_popularity, danceability, color = year)) + geom_point()
+ggplot(DATA_grouped, aes(artist_popularity, danceability, color = year_group)) + geom_point() +
+  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
+                                "2005-2009" = "#84EEF0", 
+                                "2010-2014" = "#F071E8", 
+                                "2015-2019" = "#61D6A1", 
+                                "2020-2023" = "#FFB957"))
 ```
 
 Q2: Which years had the shortest/longest songs on average?
@@ -44,20 +58,12 @@ duration_averages
 ggplot(duration_averages, aes(year, avg_min)) + geom_point() +
 geom_line(color = 'blue')
 
-ggplot(duration_averages, aes(year, avg_min)) + geom_col()
+ggplot(duration_averages, aes(year, avg_min)) + geom_col(fill = "#61D6A1")
 ```
 
 Q3: How does song duration vary from year to year?
 
 ```{r}
-DATA_grouped <- DATA %>%
-  mutate(year_group = case_when(
-    year < 2005 ~ "2000-2004",
-    year >= 2005 & year < 2010 ~ "2005-2009",
-    year >= 2010 & year < 2015 ~ "2010-2014",
-    year >= 2015 & year < 2020 ~ "2015-2019",
-    year >= 2020 ~ "2020-2023"
-  ))
 
 ggplot(DATA_grouped, aes(x = year, y = duration_ms, color = year_group)) +
   geom_point(size = 2) +  # Adjust point size
@@ -103,6 +109,23 @@ Q6: What genres were common among the most popular songs?
 ```{r}
 DATA_most_popular <- DATA_grouped[DATA_grouped$track_popularity >= 90, , drop = FALSE]
 
-DATA_most_popular
+unique_songs <- DATA_most_popular %>% distinct(track_name, .keep_all = TRUE)
+
+unique_songs
+
+genres <- c('permanent wave','pop','dance pop','pop','post-teen pop',	
+'dance pop','pop','chill pop','canadian contemporary r&b','canadian pop','pop',
+'pop','pop','canadian contemporary r&b','canadian pop','pop','big room','dance pop','edm','pop', 'pop dance','art pop','pop')
+
+genre_data <- data.frame(Genre = genres)
+
+ggplot(genre_data, aes(x = Genre)) +
+  geom_bar(fill = "#61D6A1") + 
+  labs(title = "Frequency of Song Genres", x = "Genre", y = "Count") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
+
+Q7: What genres were most popular during each year?
+
+
 
