@@ -34,6 +34,8 @@ Q1: Is there a relationship between artist_popularity and danceability?
 ```{r}
 ggplot(DATA_grouped, aes(as.character(year), artist_popularity)) + geom_boxplot()
 
+ggplot(DATA_grouped, aes(as.character(year), danceability)) + geom_boxplot()
+
 DATA_grouped %>% 
   group_by(year) %>%
   summarize(avg_artist_popularity = mean(artist_popularity), avg_danceability = mean(danceability))
@@ -82,7 +84,9 @@ ggplot(DATA_grouped, aes(x = year, y = duration_ms, color = year_group)) +
 Q4: Is there a relationship between artist_popularity and track_popularity?
 
 ```{r}
-ggplot(DATA, aes(artist_popularity, track_popularity)) + geom_boxplot()
+ggplot(DATA, aes(as.character(year), artist_popularity)) + geom_boxplot()
+
+ggplot(DATA_grouped, aes(as.character(year), track_popularity)) + geom_boxplot()
 
 DATA_grouped %>% 
   group_by(year) %>%
@@ -100,7 +104,9 @@ ggplot(DATA_grouped, aes(x = artist_popularity, y = track_popularity, color = ye
 Q5: Is there a relationship between speechiness and acousticness?
 
 ```{r}
-ggplot(DATA, aes(speechiness, acousticness)) + geom_boxplot()
+ggplot(DATA, aes(as.character(year), speechiness)) + geom_boxplot()
+
+ggplot(DATA_grouped, aes(as.character(year), acousticness)) + geom_boxplot()
 
 DATA_grouped %>% 
   group_by(year) %>%
@@ -147,8 +153,6 @@ Q8: Is there a relationship between track_popularity and variables such as (danc
 ```{r}
 #track_popularity & danceability
 
-ggplot(DATA, aes(track_popularity, danceability)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = danceability, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -158,8 +162,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = danceability, color = year_gr
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & energy
-
-ggplot(DATA, aes(track_popularity, energy)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = energy, color = year_group)) +
   geom_point(size = 1) +
@@ -171,8 +173,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = energy, color = year_group)) 
 
 #track_popularity & key
 
-ggplot(DATA, aes(track_popularity, key)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = key, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -182,8 +182,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = key, color = year_group)) +
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & loudness
-
-ggplot(DATA, aes(track_popularity, loudness)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = loudness, color = year_group)) +
   geom_point(size = 1) +
@@ -195,8 +193,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = loudness, color = year_group)
 
 #track_popularity & mode
 
-ggplot(DATA, aes(track_popularity, mode)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = mode, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -206,8 +202,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = mode, color = year_group)) +
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & speechiness
-
-ggplot(DATA, aes(track_popularity, speechiness)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = speechiness, color = year_group)) +
   geom_point(size = 1) +
@@ -219,8 +213,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = speechiness, color = year_gro
 
 #track_popularity & acousticness
 
-ggplot(DATA, aes(track_popularity, acousticness)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = acousticness, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -230,8 +222,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = acousticness, color = year_gr
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & instrumentalness
-
-ggplot(DATA, aes(track_popularity, instrumentalness)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = instrumentalness, color = year_group)) +
   geom_point(size = 1) +
@@ -243,8 +233,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = instrumentalness, color = yea
 
 #track_popularity & liveness
 
-ggplot(DATA, aes(track_popularity, liveness)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = liveness, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -254,8 +242,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = liveness, color = year_group)
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & valence
-
-ggplot(DATA, aes(track_popularity, valence)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = valence, color = year_group)) +
   geom_point(size = 1) +
@@ -267,8 +253,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = valence, color = year_group))
 
 #track_popularity & tempo
 
-ggplot(DATA, aes(track_popularity, tempo)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = tempo, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -279,8 +263,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = tempo, color = year_group)) +
 
 #track_popularity & duration_ms
 
-ggplot(DATA, aes(track_popularity, duration_ms)) + geom_boxplot()
-
 ggplot(DATA_grouped, aes(x = track_popularity, y = duration_ms, color = year_group)) +
   geom_point(size = 1) +
   scale_color_manual(values = c("2000-2004" = "#6A69BF", 
@@ -290,8 +272,6 @@ ggplot(DATA_grouped, aes(x = track_popularity, y = duration_ms, color = year_gro
                                 "2020-2023" = "#FFB957"))
 
 #track_popularity & time_signature
-
-ggplot(DATA, aes(track_popularity, time_signature)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = time_signature, color = year_group)) +
   geom_point(size = 1) +
