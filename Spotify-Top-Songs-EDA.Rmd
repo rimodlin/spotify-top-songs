@@ -145,7 +145,16 @@ ggplot(genre_data, aes(x = Genre)) +
 Q7: What genres were most popular during each year?
 
 ```{r}
+genre_counts <- DATA %>%
+  group_by(year, artist_genres) %>%
+  summarise(Count = n(), .groups = 'drop')
 
+most_popular_genres <- genre_counts %>%
+  group_by(year) %>%
+  filter(Count == max(Count)) %>%
+  ungroup()
+
+most_popular_genres
 ```
 
 Q8: Is there a relationship between track_popularity and variables such as (danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo,  duration_ms, time_signature) ?
