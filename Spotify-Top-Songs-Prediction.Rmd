@@ -1,0 +1,67 @@
+---
+title: "Spotify-Top-Songs-Prediction"
+author: "Riley Modlin"
+date: "2025-02-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(caret)
+library(randomForest)
+library(glmnet)
+
+RAW_DATA = read_csv("C:/Users/rimod/OneDrive/Desktop/spotify-top-songs-data-analysis/playlist_2010to2023.csv", col_names=T)
+```
+
+Which statistics are most useful in predicting the popularity of a track?
+
+```{r}
+DATA = RAW_DATA %>% select(track_popularity, artist_popularity, danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_ms, time_signature)
+
+DATA
+```
+
+Split data into train and test sets
+
+```{r}
+set.seed(779)
+
+trainIndex <- createDataPartition(DATA$track_popularity, p = 0.8, list = FALSE)
+
+train_data <- DATA[trainIndex, ]
+test_data <- DATA[-trainIndex, ]
+
+train_data
+```
+
+Linear Regression
+
+#look at p-values for feature significance
+
+```{r}
+lm_model <- lm(track_popularity~., data = train_data)
+summary(lm_model)
+```
+
+Using LASSO regression for feature selection
+
+```{r}
+X_train <- model.matrix(track_popularity ~ ., train_data)[, -1]  # Remove intercept
+y_train <- train_data$track_popularity
+
+lasso_model <- cv.glmnet(X_train, y_train, alpha = 1)  # LASSO
+selected_features <- coef(lasso_model, s = "lambda.min")  # Important features
+print(selected_features)
+```
+
+Using random forest for feature importance
+
+```{r}
+rf_model <- randomForest(track_popularity ~ ., data = train_data, importance = TRUE)
+varImpPlot(rf_model)  # Visualize feature importance
+```
+
