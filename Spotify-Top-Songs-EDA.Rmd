@@ -41,11 +41,13 @@ DATA_grouped %>%
   summarize(avg_artist_popularity = mean(artist_popularity), avg_danceability = mean(danceability))
 
 ggplot(DATA_grouped, aes(artist_popularity, danceability, color = year_group)) + geom_point() +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(artist_popularity, danceability)) + geom_smooth(color = "#7B7BB7", se = F)
 ```
 
 Q2: Which years had the shortest/longest songs on average?
@@ -62,22 +64,16 @@ duration_averages$avg_min <- duration_averages$avg_second/60
 duration_averages
 
 ggplot(duration_averages, aes(year, avg_min)) + geom_point() +
-geom_line(color = 'blue')
+geom_line(color = '#7B7BB7')
 
-ggplot(duration_averages, aes(year, avg_min)) + geom_col(fill = "#61D6A1")
+ggplot(duration_averages, aes(year, avg_min)) + geom_col(fill = "#7B7BB7")
 ```
 
 Q3: How does song duration vary from year to year?
 
 ```{r}
-ggplot(DATA_grouped, aes(x = year, y = duration_ms, color = year_group)) +
-  geom_point(size = 2) +  # Adjust point size
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
 
+ggplot(DATA_grouped, aes(x = duration_ms)) + geom_histogram(fill= "#7B7BB7") + facet_wrap(~year)
 
 ```
 
@@ -94,11 +90,14 @@ DATA_grouped %>%
 
 ggplot(DATA_grouped, aes(x = artist_popularity, y = track_popularity, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(artist_popularity, danceability)) + geom_smooth(color = "#7B7BB7", se = F)
+  
 ```
 
 Q5: Is there a relationship between speechiness and acousticness?
@@ -114,11 +113,13 @@ DATA_grouped %>%
 
 ggplot(DATA_grouped, aes(x = speechiness, y = acousticness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = speechiness, y = acousticness)) + geom_smooth(color = "#7B7BB7", se = F)
 ```
 
 Q6: What genres were common among the most popular songs?
@@ -137,7 +138,7 @@ genres <- c('permanent wave','pop','dance pop','pop','post-teen pop',
 genre_data <- data.frame(Genre = genres)
 
 ggplot(genre_data, aes(x = Genre)) +
-  geom_bar(fill = "#61D6A1") + 
+  geom_bar(fill = "#7B7BB7") + 
   labs(title = "Frequency of Song Genres", x = "Genre", y = "Count") + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
@@ -164,131 +165,157 @@ Q8: Is there a relationship between track_popularity and variables such as (danc
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = danceability, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = danceability)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & energy
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = energy, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = energy)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & key
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = key, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = key)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & loudness
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = loudness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = loudness)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & mode
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = mode, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = mode)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & speechiness
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = speechiness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = speechiness)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & acousticness
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = acousticness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = acousticness)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & instrumentalness
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = instrumentalness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = instrumentalness)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & liveness
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = liveness, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = liveness)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & valence
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = valence, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = valence)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & tempo
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = tempo, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = tempo)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & duration_ms
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = duration_ms, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = duration_ms)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #track_popularity & time_signature
 
 ggplot(DATA_grouped, aes(x = track_popularity, y = time_signature, color = year_group)) +
   geom_point(size = 1) +
-  scale_color_manual(values = c("2000-2004" = "#6A69BF", 
-                                "2005-2009" = "#84EEF0", 
-                                "2010-2014" = "#F071E8", 
-                                "2015-2019" = "#61D6A1", 
-                                "2020-2023" = "#FFB957"))
+  scale_color_manual(values = c("2000-2004" = "#242442", 
+                                "2005-2009" = "#414176", 
+                                "2010-2014" = "#57579E", 
+                                "2015-2019" = "#7B7BB7", 
+                                "2020-2023" = "#A3A3CC"))
+
+ggplot(DATA_grouped, aes(x = track_popularity, y = time_signature)) + geom_smooth(color = "#7B7BB7", se = F)
 
 #averages
 
