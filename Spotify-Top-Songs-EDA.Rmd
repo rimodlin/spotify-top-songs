@@ -28,7 +28,6 @@ DATA_grouped <- DATA %>%
   ))
 ```
 
-
 Q1: Is there a relationship between artist_popularity and danceability?
 
 ```{r}
@@ -73,7 +72,11 @@ Q3: How does song duration vary from year to year?
 
 ```{r}
 
-ggplot(DATA_grouped, aes(x = duration_ms)) + geom_histogram(fill= "#7B7BB7") + facet_wrap(~year)
+bins <- sqrt(2400)
+
+bw <- 2 * IQR(DATA_grouped$duration_ms) / length(DATA_grouped$duration_ms)^(1/3)
+
+ggplot(DATA_grouped, aes(x = duration_ms)) + geom_histogram(fill= "#7B7BB7", bins = bins, binwidth = bw) + facet_wrap(~year)
 
 ```
 
@@ -158,7 +161,7 @@ most_popular_genres <- genre_counts %>%
 most_popular_genres
 ```
 
-Q8: Is there a relationship between track_popularity and variables such as (danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo,  duration_ms, time_signature) ?
+Q8: Is there a relationship between track_popularity and variables such as (danceability, energy, key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, duration_ms, time_signature) ?
 
 ```{r}
 #track_popularity & danceability
@@ -324,4 +327,3 @@ DATA_grouped %>%
   summarize(avg_track_popularity = mean(track_popularity), avg_danceability = mean(danceability), avg_energy = mean(energy), avg_loudness = mean(loudness), avg_speechiness = mean(speechiness), avg_acousticness = mean(acousticness), avg_instrumentalness = mean(instrumentalness), avg_liveness = mean(liveness), avg_valence = mean(valence), avg_tempo = mean(tempo), avg_duration_ms = mean(duration_ms))
 
 ```
-
