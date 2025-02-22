@@ -10,15 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
 library(dplyr)
+library(kableExtra)
 
-DATA = read_csv("C:/Users/rimod/OneDrive/Desktop/spotify-top-songs-data-analysis/playlist_2010to2023.csv", col_names=T)
+RAW_DATA = read_csv("C:/Users/rimod/OneDrive/Desktop/spotify-top-songs-data-analysis/playlist_2010to2023.csv", col_names=T)
 
 ```
 
 ```{r}
-DATA
+RAW_DATA
 
-DATA_grouped <- DATA %>%
+DATA_grouped <- RAW_DATA %>%
   mutate(year_group = case_when(
     year < 2005 ~ "2000-2004",
     year >= 2005 & year < 2010 ~ "2005-2009",
@@ -37,7 +38,9 @@ ggplot(DATA_grouped, aes(as.character(year), danceability)) + geom_boxplot()
 
 DATA_grouped %>% 
   group_by(year) %>%
-  summarize(avg_artist_popularity = mean(artist_popularity), avg_danceability = mean(danceability))
+  summarize(avg_artist_popularity = mean(artist_popularity), avg_danceability = mean(danceability)) %>% 
+  kbl() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 
 ggplot(DATA_grouped, aes(artist_popularity, danceability, color = year_group)) + geom_point() +
   scale_color_manual(values = c("2000-2004" = "#242442", 
@@ -52,7 +55,7 @@ ggplot(DATA_grouped, aes(artist_popularity, danceability)) + geom_smooth(color =
 Q2: Which years had the shortest/longest songs on average?
 
 ```{r}
-duration_averages = DATA %>% 
+duration_averages = RAW_DATA %>% 
                       group_by(year) %>%
                       summarize(avg_ms = mean(duration_ms))
 
@@ -83,7 +86,7 @@ ggplot(DATA_grouped, aes(x = duration_ms)) + geom_histogram(fill= "#7B7BB7", bin
 Q4: Is there a relationship between artist_popularity and track_popularity?
 
 ```{r}
-ggplot(DATA, aes(as.character(year), artist_popularity)) + geom_boxplot()
+ggplot(RAW_DATA, aes(as.character(year), artist_popularity)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(as.character(year), track_popularity)) + geom_boxplot()
 
@@ -106,7 +109,7 @@ ggplot(DATA_grouped, aes(artist_popularity, danceability)) + geom_smooth(color =
 Q5: Is there a relationship between speechiness and acousticness?
 
 ```{r}
-ggplot(DATA, aes(as.character(year), speechiness)) + geom_boxplot()
+ggplot(RAW_DATA, aes(as.character(year), speechiness)) + geom_boxplot()
 
 ggplot(DATA_grouped, aes(as.character(year), acousticness)) + geom_boxplot()
 
@@ -149,7 +152,7 @@ ggplot(genre_data, aes(x = Genre)) +
 Q7: What genres were most popular during each year?
 
 ```{r}
-genre_counts <- DATA %>%
+genre_counts <- RAW_DATA %>%
   group_by(year, artist_genres) %>%
   summarise(Count = n(), .groups = 'drop')
 
@@ -340,3 +343,12 @@ ggplot(yearly_avg_track_popularity, aes(year, avg_track_popularity)) + geom_poin
 geom_line(color = '#7B7BB7')
 ```
 
+Q10: Top 10 most popular songs based on track_popularity.
+
+```{r}
+top_10_songs = DATA_grouped %>% arrange(desc(track_popularity)) %>%
+  select(year, track_name, track_popularity, album, artist_name, artist_genres, artist_popularity)
+
+top_10_songs[1:11,] %>% kbl() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
