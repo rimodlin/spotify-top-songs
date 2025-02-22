@@ -327,3 +327,16 @@ DATA_grouped %>%
   summarize(avg_track_popularity = mean(track_popularity), avg_danceability = mean(danceability), avg_energy = mean(energy), avg_loudness = mean(loudness), avg_speechiness = mean(speechiness), avg_acousticness = mean(acousticness), avg_instrumentalness = mean(instrumentalness), avg_liveness = mean(liveness), avg_valence = mean(valence), avg_tempo = mean(tempo), avg_duration_ms = mean(duration_ms))
 
 ```
+
+Q9: What is the average popularity of songs per year? How does average popularity change from year to year?
+
+```{r}
+yearly_avg_track_popularity = DATA_grouped %>% group_by(year) %>%
+  summarize(avg_track_popularity = mean(track_popularity))
+
+yearly_avg_track_popularity
+
+ggplot(yearly_avg_track_popularity, aes(year, avg_track_popularity)) + geom_point() +
+geom_line(color = '#7B7BB7')
+```
+
