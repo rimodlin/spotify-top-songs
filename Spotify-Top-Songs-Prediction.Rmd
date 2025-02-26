@@ -55,15 +55,178 @@ y_train <- train_data$track_popularity
 
 lasso_model <- cv.glmnet(X_train, y_train, alpha = 1)  # LASSO
 selected_features <- coef(lasso_model, s = "lambda.min")  # Important features
-print(selected_features)
+selected_features
 ```
 
 Using random forest for feature importance
 
 ```{r}
 rf_model <- randomForest(track_popularity ~ ., data = train_data, importance = TRUE)
-varImpPlot(rf_model)  # Visualize feature importance
+
+
+varImpPlot(rf_model)
+importance(rf_model)
+
 ```
 
+Train final models on the most important features
 
+#Model 1: artist_popularity (from linear regression)
+
+```{r}
+selected_features_1 <- c("artist_popularity")
+
+final_model_1 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_1, "track_popularity")])
+
+predictions_1 <- predict(final_model_1, newdata = test_data)
+
+rmse_1 <- sqrt(mean((test_data$track_popularity - predictions_1)^2))
+
+print(paste("RMSE:", rmse_1))
+```
+
+#Model 2: time_signature, valence, speechiness, artist_popularity, duration_ms (from LASSO regression)
+
+```{r}
+selected_features_2 <- c("time_signature", "valence", "speechiness", "artist_popularity", "duration_ms")
+
+final_model_2 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_2, "track_popularity")])
+
+predictions_2 <- predict(final_model_2, newdata = test_data)
+
+rmse_2 <- sqrt(mean((test_data$track_popularity - predictions_2)^2))
+
+print(paste("RMSE:", rmse_2))
+```
+#Model 3: artist_popularity, valence, energy (from random forest)
+
+```{r}
+selected_features_3 <- c("artist_popularity", "valence", "energy")
+
+final_model_3 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_3, "track_popularity")])
+
+predictions_3 <- predict(final_model_3, newdata = test_data)
+
+rmse_3 <- sqrt(mean((test_data$track_popularity - predictions_3)^2))
+
+print(paste("RMSE:", rmse_3))
+```
+
+#Model 4: artist_popularity, valence (from combination)
+
+```{r}
+selected_features_4 <- c("artist_popularity", "valence")
+
+final_model_4 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_4, "track_popularity")])
+
+predictions_4 <- predict(final_model_4, newdata = test_data)
+
+rmse_4 <- sqrt(mean((test_data$track_popularity - predictions_4)^2))
+
+print(paste("RMSE:", rmse_4))
+```
+
+#Model 5: artist_population, valence, duration_ms (from combination)
+
+```{r}
+selected_features_5 <- c("artist_popularity", "valence", "duration_ms")
+
+final_model_5 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_5, "track_popularity")])
+
+predictions_5 <- predict(final_model_5, newdata = test_data)
+
+rmse_5 <- sqrt(mean((test_data$track_popularity - predictions_5)^2))
+
+print(paste("RMSE:", rmse_5))
+```
+
+#Model 6: artist_popularity, valence, speechiness
+
+```{r}
+selected_features_6 <- c("artist_popularity", "valence", "speechiness")
+
+final_model_6 <- lm(track_popularity ~ ., data = train_data[, c(selected_features_6, "track_popularity")])
+
+predictions_6 <- predict(final_model_6, newdata = test_data)
+
+rmse_6 <- sqrt(mean((test_data$track_popularity - predictions_6)^2))
+
+print(paste("RMSE:", rmse_6))
+```
+Correct, False Positive, False Negative Scatterplots
+
+#Model 1: artist_popularity
+
+```{r}
+threshold <- 10 
+
+test_data <- test_data %>%
+  mutate(predicted_popularity = predictions_1,
+         error = predicted_popularity - track_popularity,
+         class = case_when(
+           abs(error) <= threshold ~ "Correct",
+           error > threshold ~ "False Positive",  # Overestimated popularity
+           error < -threshold ~ "False Negative"  # Underestimated popularity
+         ))
+
+ggplot(test_data, aes(x = track_popularity, y = predicted_popularity, color = class)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") + # Perfect prediction line
+  scale_color_manual(values = c("Correct" = "green", "False Positive" = "blue", "False Negative" = "red")) +
+  labs(title = "Actual vs. Predicted Track Popularity",
+       x = "Actual Popularity",
+       y = "Predicted Popularity",
+       color = "Classification") +
+  theme_minimal()
+```
+
+#Model 4: artist_popularity, valence
+
+```{r}
+threshold <- 10 
+
+test_data <- test_data %>%
+  mutate(predicted_popularity = predictions_4,
+         error = predicted_popularity - track_popularity,
+         class = case_when(
+           abs(error) <= threshold ~ "Correct",
+           error > threshold ~ "False Positive",  # Overestimated popularity
+           error < -threshold ~ "False Negative"  # Underestimated popularity
+         ))
+
+ggplot(test_data, aes(x = track_popularity, y = predicted_popularity, color = class)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") + # Perfect prediction line
+  scale_color_manual(values = c("Correct" = "green", "False Positive" = "blue", "False Negative" = "red")) +
+  labs(title = "Actual vs. Predicted Track Popularity",
+       x = "Actual Popularity",
+       y = "Predicted Popularity",
+       color = "Classification") +
+  theme_minimal()
+```
+
+#Model 3: artist_popularity, valence, energy
+
+```{r}
+threshold <- 10 
+
+test_data <- test_data %>%
+  mutate(predicted_popularity = predictions_3,
+         error = predicted_popularity - track_popularity,
+         class = case_when(
+           abs(error) <= threshold ~ "Correct",
+           error > threshold ~ "False Positive",  # Overestimated popularity
+           error < -threshold ~ "False Negative"  # Underestimated popularity
+         ))
+
+ggplot(test_data, aes(x = track_popularity, y = predicted_popularity, color = class)) +
+  geom_point(alpha = 0.6) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") + # Perfect prediction line
+  scale_color_manual(values = c("Correct" = "green", "False Positive" = "blue", "False Negative" = "red")) +
+  labs(title = "Actual vs. Predicted Track Popularity",
+       x = "Actual Popularity",
+       y = "Predicted Popularity",
+       color = "Classification") +
+  theme_minimal()
+```
 
