@@ -229,4 +229,3 @@ ggplot(test_data, aes(x = track_popularity, y = predicted_popularity, color = cl
        color = "Classification") +
   theme_minimal()
 ```
-
